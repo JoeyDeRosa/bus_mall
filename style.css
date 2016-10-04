@@ -1,0 +1,13 @@
+body {
+  background-color: #777;
+}
+
+div {
+  background-color: #999;
+  text-align: center;
+}
+
+img {
+  height: 300px;
+  width: 300px;
+}
