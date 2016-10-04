@@ -2,7 +2,9 @@
 <html>
   <head>
     <title>Bus Mall</title>
+    <link href="reset.css" rel="stylesheet">
     <link href="style.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.min.js"></script>
   </head>
   <header>
     <h1>Bus Mall</h1>
@@ -12,7 +14,10 @@
   <body>
     <div id="imageHolder"></div>
     <div>
-      <ul id="listHolder"></ul>
+      <canvas id="chart" width="800px" height="300px"></canvas>
+    </div>
+    <div>
+      <canvas id="chart2" width="800px" height="300px"></canvas>
     </div>
     <script src="app.js"></script>
   </body>

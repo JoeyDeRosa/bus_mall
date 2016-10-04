@@ -5,18 +5,20 @@ function TestImage(src, number, imageName) {
   this.number = number;
   this.imageName = imageName;
   images.push(this);
+  namesArray.push(this.imageName);
 }
 var imageHolder = document.getElementById('imageHolder');
-var listHolder = document.getElementById('listHolder');
 var imgEl1 = document.createElement('img');
 var imgEl2 = document.createElement('img');
 var imgEl3 = document.createElement('img');
-var previousImage1 = false;
-var previousImage2 = false;
-var previousImage3 = false;
 var count = 0;
 var index = 0;
+var imgElArray = [imgEl1, imgEl2, imgEl3];
+var displayImages = ['','',''];
+var previousImages = ['','',''];
 var images = [];
+var namesArray = [];
+var percentageArray = [];
 new TestImage('images/bag.jpg',0,'bag');
 new TestImage('images/banana.jpg',1,'banana');
 new TestImage('images/bathroom.jpg',2,'bathroom');
@@ -39,7 +41,66 @@ new TestImage('images/water-can.jpg',18,'water can');
 new TestImage('images/wine-glass.jpg',19,'wine glass');
 var imageSelected = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
 var imageTimesShown = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
-
+var data = {
+  labels: namesArray, // titles array we declared earlier
+  datasets: [
+    {
+      label: 'Number of Times an Image was Clicked',
+      data: imageSelected, // votes array we declared earlier
+      hoverBackgroundColor: [
+        'red',
+        'red',
+        'red',
+        'red',
+        'red',
+        'red',
+        'red',
+        'red',
+        'red',
+        'red',
+        'red',
+        'red',
+        'red',
+        'red',
+        'red',
+        'red',
+        'red',
+        'red',
+        'red',
+        'red'
+      ]
+    }]
+};
+var data2 = {
+  labels: namesArray, // titles array we declared earlier
+  datasets: [
+    {
+      label: 'Image Selected Percentage',
+      data: percentageArray, // votes array we declared earlier
+      hoverBackgroundColor: [
+        'red',
+        'red',
+        'red',
+        'red',
+        'red',
+        'red',
+        'red',
+        'red',
+        'red',
+        'red',
+        'red',
+        'red',
+        'red',
+        'red',
+        'red',
+        'red',
+        'red',
+        'red',
+        'red',
+        'red'
+      ]
+    }]
+};
 //creating functions
 function randomNumber() {
   index = Math.floor(Math.random() * images.length);
@@ -47,43 +108,39 @@ function randomNumber() {
 }
 
 function generateImages() {
-  var image1 = images[randomNumber()].src;
-  while(image1 === previousImage1 || image1 === previousImage2 || image1 === previousImage3) {
-    image1 = images[randomNumber()].src;
+  for(var i = 0; i < 3; i++) {
+    var possibleImage = images[randomNumber()];
+    while(possibleImage === previousImages[0] || possibleImage === previousImages[1] || possibleImage === previousImages[2] || possibleImage === displayImages[0] || possibleImage === displayImages[1] || possibleImage === displayImages[2]) {
+      possibleImage = images[randomNumber()];
+    }
+    ++imageTimesShown[index];
+    displayImages[i] = possibleImage;
+    previousImages[i] = displayImages[i];
+    imgElArray[i].src = displayImages[i].src;
+    imgElArray[i].setAttribute('alt', displayImages[i].number);
+    imageHolder.appendChild(imgElArray[i]);
   }
-  ++imageTimesShown[index];
-  imgEl1.src = image1;
-  imgEl1.setAttribute('alt', images[index].number);
-  imageHolder.appendChild(imgEl1);
-  //
-  var image2 = images[randomNumber()].src;
-  while(image2 === previousImage1 || image2 === previousImage2 || image2 === previousImage3 || image2 === image1) {
-    image2 = images[randomNumber()].src;
-  }
-  ++imageTimesShown[index];
-  imgEl2.src = image2;
-  imgEl2.setAttribute('alt', images[index].number);
-  imageHolder.appendChild(imgEl2);
-  //
-  var image3 = images[randomNumber()].src;
-  while(image3 === previousImage1 || image3 === previousImage2 || image3 === previousImage3 || image3 === image1 || image3 === image2) {
-    image3 = images[randomNumber()].src;
-  }
-  ++imageTimesShown[index];
-  imgEl3.src = image3;
-  imgEl3.setAttribute('alt', images[index].number);
-  imageHolder.appendChild(imgEl3);
-  previousImage1 = image1;
-  previousImage2 = image2;
-  previousImage3 = image3;
 }
 
-function displayTimesSelected() {
-  for(var i = 0; i < images.length; i++) {
-    var message = 'The ' + images[i].imageName + ' image was selected ' + imageSelected[i] + ' time(s).';
-    var liEl = document.createElement('li');
-    liEl.textContent = message;
-    listHolder.appendChild(liEl);
+function displayTable(chartData, chartID) {
+  var ctx = document.getElementById(chartID).getContext('2d');
+  new Chart(ctx,{
+    type: 'bar',
+    data: chartData,
+    options: {
+      responsive: false
+    },
+    scales: [{
+      ticks: {
+        beginAtZero:true
+      }
+    }]
+  });
+}
+
+function findPercentage() {
+  for(var i = 0; i < 20; i++) {
+    percentageArray[i] = imageSelected[i] / imageTimesShown[i] * 100;
   }
 }
 
@@ -92,10 +149,13 @@ function handleClick(event) {
   ++imageSelected[selectedImage];
   ++count;
   if(count === 25){
-    displayTimesSelected();
+    displayTable(data, 'chart');
+    findPercentage();
+    displayTable(data2, 'chart2');
     imageHolder.removeEventListener('click', handleClick);
+  } else {
+    generateImages();
   }
-  generateImages();
 }
 
 //run functions
