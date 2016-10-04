@@ -5,9 +5,9 @@ function TestImage(src, number, imageName) {
   this.number = number;
   this.imageName = imageName;
   images.push(this);
+  namesArray.push(this.imageName);
 }
 var imageHolder = document.getElementById('imageHolder');
-var listHolder = document.getElementById('listHolder');
 var imgEl1 = document.createElement('img');
 var imgEl2 = document.createElement('img');
 var imgEl3 = document.createElement('img');
@@ -16,7 +16,9 @@ var previousImage2 = false;
 var previousImage3 = false;
 var count = 0;
 var index = 0;
+var imageChart;
 var images = [];
+var namesArray = [];
 new TestImage('images/bag.jpg',0,'bag');
 new TestImage('images/banana.jpg',1,'banana');
 new TestImage('images/bathroom.jpg',2,'bathroom');
@@ -39,6 +41,37 @@ new TestImage('images/water-can.jpg',18,'water can');
 new TestImage('images/wine-glass.jpg',19,'wine glass');
 var imageSelected = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
 var imageTimesShown = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+var data = {
+  labels: namesArray, // titles array we declared earlier
+  datasets: [
+    {
+      data: imageSelected, // votes array we declared earlier
+      backgroundColor: [
+      ],
+      hoverBackgroundColor: [
+        'red',
+        'red',
+        'red',
+        'red',
+        'red',
+        'red',
+        'red',
+        'red',
+        'red',
+        'red',
+        'red',
+        'red',
+        'red',
+        'red',
+        'red',
+        'red',
+        'red',
+        'red',
+        'red',
+        'red'
+      ]
+    }]
+};
 
 //creating functions
 function randomNumber() {
@@ -78,13 +111,20 @@ function generateImages() {
   previousImage3 = image3;
 }
 
-function displayTimesSelected() {
-  for(var i = 0; i < images.length; i++) {
-    var message = 'The ' + images[i].imageName + ' image was selected ' + imageSelected[i] + ' time(s).';
-    var liEl = document.createElement('li');
-    liEl.textContent = message;
-    listHolder.appendChild(liEl);
-  }
+function displayTable() {
+  var ctx = document.getElementById('chart').getContext('2d');
+  imageChart = new Chart(ctx,{
+    type: 'bar',
+    data: data,
+    options: {
+      responsive: false
+    },
+    scales: [{
+      ticks: {
+        beginAtZero:true
+      }
+    }]
+  });
 }
 
 function handleClick(event) {
@@ -92,7 +132,7 @@ function handleClick(event) {
   ++imageSelected[selectedImage];
   ++count;
   if(count === 25){
-    displayTimesSelected();
+    displayTable();
     imageHolder.removeEventListener('click', handleClick);
   }
   generateImages();
