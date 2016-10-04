@@ -2,12 +2,27 @@ body {
   background-color: #777;
 }
 
+h1 {
+  margin-left: 20px;
+  font-size: 50px;
+}
+
+p {
+  margin-left: 20px;
+}
+
 div {
   background-color: #999;
   text-align: center;
+  height: 300px;
+  margin: 20px;
 }
 
 img {
   height: 300px;
   width: 300px;
+}
+
+canvas {
+  margin: auto;
 }

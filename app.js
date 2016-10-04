@@ -13,12 +13,12 @@ var imgEl2 = document.createElement('img');
 var imgEl3 = document.createElement('img');
 var count = 0;
 var index = 0;
-var imageChart;
 var imgElArray = [imgEl1, imgEl2, imgEl3];
 var displayImages = ['','',''];
 var previousImages = ['','',''];
 var images = [];
 var namesArray = [];
+var percentageArray = [];
 new TestImage('images/bag.jpg',0,'bag');
 new TestImage('images/banana.jpg',1,'banana');
 new TestImage('images/bathroom.jpg',2,'bathroom');
@@ -45,9 +45,8 @@ var data = {
   labels: namesArray, // titles array we declared earlier
   datasets: [
     {
+      label: 'Number of Times an Image was Clicked',
       data: imageSelected, // votes array we declared earlier
-      backgroundColor: [
-      ],
       hoverBackgroundColor: [
         'red',
         'red',
@@ -72,7 +71,36 @@ var data = {
       ]
     }]
 };
-
+var data2 = {
+  labels: namesArray, // titles array we declared earlier
+  datasets: [
+    {
+      label: 'Image Selected Percentage',
+      data: percentageArray, // votes array we declared earlier
+      hoverBackgroundColor: [
+        'red',
+        'red',
+        'red',
+        'red',
+        'red',
+        'red',
+        'red',
+        'red',
+        'red',
+        'red',
+        'red',
+        'red',
+        'red',
+        'red',
+        'red',
+        'red',
+        'red',
+        'red',
+        'red',
+        'red'
+      ]
+    }]
+};
 //creating functions
 function randomNumber() {
   index = Math.floor(Math.random() * images.length);
@@ -94,11 +122,11 @@ function generateImages() {
   }
 }
 
-function displayTable() {
-  var ctx = document.getElementById('chart').getContext('2d');
-  imageChart = new Chart(ctx,{
+function displayTable(chartData, chartID) {
+  var ctx = document.getElementById(chartID).getContext('2d');
+  new Chart(ctx,{
     type: 'bar',
-    data: data,
+    data: chartData,
     options: {
       responsive: false
     },
@@ -110,15 +138,24 @@ function displayTable() {
   });
 }
 
+function findPercentage() {
+  for(var i = 0; i < 20; i++) {
+    percentageArray[i] = imageSelected[i] / imageTimesShown[i] * 100;
+  }
+}
+
 function handleClick(event) {
   var selectedImage = event.target.alt;
   ++imageSelected[selectedImage];
   ++count;
   if(count === 25){
-    displayTable();
+    displayTable(data, 'chart');
+    findPercentage();
+    displayTable(data2, 'chart2');
     imageHolder.removeEventListener('click', handleClick);
+  } else {
+    generateImages();
   }
-  generateImages();
 }
 
 //run functions
