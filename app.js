@@ -11,12 +11,12 @@ var imageHolder = document.getElementById('imageHolder');
 var imgEl1 = document.createElement('img');
 var imgEl2 = document.createElement('img');
 var imgEl3 = document.createElement('img');
-var previousImage1 = false;
-var previousImage2 = false;
-var previousImage3 = false;
 var count = 0;
 var index = 0;
 var imageChart;
+var imgElArray = [imgEl1, imgEl2, imgEl3];
+var displayImages = ['','',''];
+var previousImages = ['','',''];
 var images = [];
 var namesArray = [];
 new TestImage('images/bag.jpg',0,'bag');
@@ -80,35 +80,18 @@ function randomNumber() {
 }
 
 function generateImages() {
-  var image1 = images[randomNumber()].src;
-  while(image1 === previousImage1 || image1 === previousImage2 || image1 === previousImage3) {
-    image1 = images[randomNumber()].src;
+  for(var i = 0; i < 3; i++) {
+    var possibleImage = images[randomNumber()];
+    while(possibleImage === previousImages[0] || possibleImage === previousImages[1] || possibleImage === previousImages[2] || possibleImage === displayImages[0] || possibleImage === displayImages[1] || possibleImage === displayImages[2]) {
+      possibleImage = images[randomNumber()];
+    }
+    ++imageTimesShown[index];
+    displayImages[i] = possibleImage;
+    previousImages[i] = displayImages[i];
+    imgElArray[i].src = displayImages[i].src;
+    imgElArray[i].setAttribute('alt', displayImages[i].number);
+    imageHolder.appendChild(imgElArray[i]);
   }
-  ++imageTimesShown[index];
-  imgEl1.src = image1;
-  imgEl1.setAttribute('alt', images[index].number);
-  imageHolder.appendChild(imgEl1);
-  //
-  var image2 = images[randomNumber()].src;
-  while(image2 === previousImage1 || image2 === previousImage2 || image2 === previousImage3 || image2 === image1) {
-    image2 = images[randomNumber()].src;
-  }
-  ++imageTimesShown[index];
-  imgEl2.src = image2;
-  imgEl2.setAttribute('alt', images[index].number);
-  imageHolder.appendChild(imgEl2);
-  //
-  var image3 = images[randomNumber()].src;
-  while(image3 === previousImage1 || image3 === previousImage2 || image3 === previousImage3 || image3 === image1 || image3 === image2) {
-    image3 = images[randomNumber()].src;
-  }
-  ++imageTimesShown[index];
-  imgEl3.src = image3;
-  imgEl3.setAttribute('alt', images[index].number);
-  imageHolder.appendChild(imgEl3);
-  previousImage1 = image1;
-  previousImage2 = image2;
-  previousImage3 = image3;
 }
 
 function displayTable() {
