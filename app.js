@@ -93,7 +93,7 @@ function handleClick(event) {
   ++count;
   if(count === 25){
     displayTimesSelected();
-    imageHolder.removeEventListener('click', displayTimesSelected);
+    imageHolder.removeEventListener('click', handleClick);
   }
   generateImages();
 }
