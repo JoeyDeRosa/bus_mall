@@ -19,90 +19,60 @@ var previousImages = ['','',''];
 var images = [];
 var namesArray = [];
 var percentageArray = [];
-function start(){
-  new TestImage('images/bag.jpg',0,'bag');
-  new TestImage('images/banana.jpg',1,'banana');
-  new TestImage('images/bathroom.jpg',2,'bathroom');
-  new TestImage('images/boots.jpg',3,'boots');
-  new TestImage('images/breakfast.jpg',4,'breakfast');
-  new TestImage('images/bubblegum.jpg',5,'bubblegum');
-  new TestImage('images/chair.jpg',6,'chair');
-  new TestImage('images/cthulhu.jpg',7,'cthulhu');
-  new TestImage('images/dog-duck.jpg',8,'dog duck');
-  new TestImage('images/dragon.jpg',9,'dragon');
-  new TestImage('images/pen.jpg',10,'pen');
-  new TestImage('images/pet-sweep.jpg',11,'pet sweep');
-  new TestImage('images/scissors.jpg',12,'scissors');
-  new TestImage('images/shark.jpg',13,'shark');
-  new TestImage('images/sweep.png',14,'child sweep');
-  new TestImage('images/tauntaun.jpg',15,'tauntaun');
-  new TestImage('images/unicorn.jpg',16,'unicorn');
-  new TestImage('images/usb.gif',17,'usb');
-  new TestImage('images/water-can.jpg',18,'water can');
-  new TestImage('images/wine-glass.jpg',19,'wine glass');
-  var imageSelected = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
-  var imageTimesShown = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+new TestImage('images/bag.jpg',0,'bag');
+new TestImage('images/banana.jpg',1,'banana');
+new TestImage('images/bathroom.jpg',2,'bathroom');
+new TestImage('images/boots.jpg',3,'boots');
+new TestImage('images/breakfast.jpg',4,'breakfast');
+new TestImage('images/bubblegum.jpg',5,'bubblegum');
+new TestImage('images/chair.jpg',6,'chair');
+new TestImage('images/cthulhu.jpg',7,'cthulhu');
+new TestImage('images/dog-duck.jpg',8,'dog duck');
+new TestImage('images/dragon.jpg',9,'dragon');
+new TestImage('images/pen.jpg',10,'pen');
+new TestImage('images/pet-sweep.jpg',11,'pet sweep');
+new TestImage('images/scissors.jpg',12,'scissors');
+new TestImage('images/shark.jpg',13,'shark');
+new TestImage('images/sweep.png',14,'child sweep');
+new TestImage('images/tauntaun.jpg',15,'tauntaun');
+new TestImage('images/unicorn.jpg',16,'unicorn');
+new TestImage('images/usb.gif',17,'usb');
+new TestImage('images/water-can.jpg',18,'water can');
+new TestImage('images/wine-glass.jpg',19,'wine glass');
 
-var data = {
-  labels: namesArray, // titles array we declared earlier
-  datasets: [
-    {
-      label: 'Number of Times an Image was Clicked',
-      data: imageSelected, // votes array we declared earlier
-      hoverBackgroundColor: [
-        'red',
-        'red',
-        'red',
-        'red',
-        'red',
-        'red',
-        'red',
-        'red',
-        'red',
-        'red',
-        'red',
-        'red',
-        'red',
-        'red',
-        'red',
-        'red',
-        'red',
-        'red',
-        'red',
-        'red'
-      ]
-    }]
-};
-var data2 = {
-  labels: namesArray, // titles array we declared earlier
-  datasets: [
-    {
-      label: 'Image Selected Percentage',
-      data: percentageArray, // votes array we declared earlier
-      hoverBackgroundColor: [
-        'red',
-        'red',
-        'red',
-        'red',
-        'red',
-        'red',
-        'red',
-        'red',
-        'red',
-        'red',
-        'red',
-        'red',
-        'red',
-        'red',
-        'red',
-        'red',
-        'red',
-        'red',
-        'red',
-        'red'
-      ]
-    }]
-};
+function setTableData(title, dataArray) {
+  var data = {
+    labels: namesArray, // titles array we declared earlier
+    datasets: [
+      {
+        label: title,
+        data: dataArray, // votes array we declared earlier
+        hoverBackgroundColor: [
+          'red',
+          'red',
+          'red',
+          'red',
+          'red',
+          'red',
+          'red',
+          'red',
+          'red',
+          'red',
+          'red',
+          'red',
+          'red',
+          'red',
+          'red',
+          'red',
+          'red',
+          'red',
+          'red',
+          'red'
+        ]
+      }]
+  };
+  return data;
+}
 //creating functions
 function randomNumber() {
   index = Math.floor(Math.random() * images.length);
@@ -123,11 +93,11 @@ function generateImages() {
   }
 }
 
-function displayTable(chartData, chartID) {
+function displayTable(chartID, title, dataArray) {
   var ctx = document.getElementById(chartID).getContext('2d');
   new Chart(ctx,{
     type: 'bar',
-    data: chartData,
+    data: setTableData(title, dataArray),
     options: {
       responsive: false
     },
@@ -157,9 +127,9 @@ function handleClick(event) {
   ++imageSelected[selectedImage];
   ++count;
   if(count === 25){
-    displayTable(data, 'chart');
+    displayTable('chart', 'Number of Times Image was Clicked', imageSelected);
     findPercentage();
-    displayTable(data2, 'chart2');
+    displayTable('chart2', 'PErcentage of Times Image was Clicked', percentageArray);
     imageHolder.removeEventListener('click', handleClick);
     save();
   } else {
@@ -180,9 +150,10 @@ if(localStorage.getItem('clicks')){
   var parseShown = JSON.parse(storeShown);
   imageSelected = parseClicks;
   imageTimesShown = parseShown;
-  start();
   generateImages();
 } else {
+  var imageSelected = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+  var imageTimesShown = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
   generateImages();
 }
 
